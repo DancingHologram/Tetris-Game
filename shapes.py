@@ -1,4 +1,5 @@
 from constants import *
+import random
 
 class Shape:
     def __init__(self, x, y, color):
@@ -6,10 +7,8 @@ class Shape:
         self.y = y
         self.color = color
 
-    def image(self):
-        # return the shape's image as a 2D list of 0s and 1s
-        pass
-
-    def rotate(self):
-        # rotate the shape's image clockwise
-        pass
+# choose chape from the 7 tetronimos
+def get_random_shape():
+    shape_type = random.choice(TETROMINO_SHAPES.keys())
+    color = COLORS[shape_type]
+    return Shape(BOARD_WIDTH // 2, 0, color)

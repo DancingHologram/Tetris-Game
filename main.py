@@ -20,10 +20,10 @@ def main():
 
     # create buttons
     start_button = button.Button(50, 50, 100, 50, "Start")
-    quit_button = button.Button(50, 120, 100, 50, "Quit")
     speed_button = button.Button(50, 190, 100, 50, "Speed")
     controls_button = button.Button(50, 260, 100, 50, "Controls")
-    buttons = [start_button, quit_button, speed_button, controls_button]
+    quit_button = button.Button(50, 120, 100, 50, "Quit")
+    buttons = [start_button, speed_button, controls_button, quit_button]
 
     # create the menu loop
     menu_running = True
@@ -76,18 +76,6 @@ def main():
                 elif event.key == pygame.K_UP:
                     mechanics.rotate(current_shape, board)
 
-        # update the game state
-        mechanics.update_game_state(current_shape, next_shape, board, score, level)
-        clock.tick(FPS)
-
-        # check for game over
-        if mechanics.check_game_over(board):
-            game_running = False
-
-        # save the high score if necessary
-        if score > mechanics.load_high_score():
-            mechanics.save_high_score(score)
-    pygame.quit()
 
 if __name__ == "__main__":
     main()
