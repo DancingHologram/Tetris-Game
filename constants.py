@@ -28,8 +28,8 @@ BOTTOM_BOUNDARY = SCREEN_HEIGHT - MARGIN
 TILE_SIZE = 30
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
-BOARD_ORIGIN_X = (SCREEN_WIDTH - (BOARD_WIDTH * TILE_SIZE)) // 2
-BOARD_ORIGIN_Y = (SCREEN_HEIGHT - (BOARD_HEIGHT * TILE_SIZE)) // 2
+BOARD_ORIGIN_X = (SCREEN_WIDTH - BOARD_WIDTH * TILE_SIZE) // 2
+BOARD_ORIGIN_Y = (SCREEN_HEIGHT - BOARD_HEIGHT * TILE_SIZE) // 2
 
 # Tetromino shapes
 TETROMINO_SHAPES = {
@@ -52,4 +52,61 @@ TETROMINO_SHAPES = {
 
     'L': [[0, 0, 1],
           [1, 1, 1]]
-}   
+} 
+
+# tetromino rotation states
+ROTATION_STATES = {
+    'I': [[[1, 1, 1, 1]],
+          [[1],
+           [1],
+           [1],
+           [1]]],
+    'O': [[[1, 1],
+           [1, 1]]],
+    'T': [[[0, 1, 0],
+           [1, 1, 1]],
+          [[1, 0],
+           [1, 1],
+           [1, 0]],
+          [[1, 1, 1],
+           [0, 1, 0]],
+            [[0, 1],
+            [0, 1],
+            [0, 1]]],
+    'S': [[[0, 1, 1],
+           [1, 1, 0]],
+          [[1, 0],
+           [1, 1],
+           [0, 1]]],
+    'Z': [[[1, 1, 0],       
+           [0, 1, 1]],
+          [[0, 1],
+           [1, 1],
+           [1, 0]]],
+    'J': [[[1, 0, 0],
+           [1, 1, 1]],
+          [[1, 1],
+            [1, 0],
+            [1, 0]],
+            [[1, 1, 1],
+            [0, 0, 1]],
+            [[0, 1],
+            [0, 1],
+            [1, 1]]],
+    'L': [[[0, 0, 1],
+           [1, 1, 1]],
+          [[1, 0],
+           [1, 0],
+           [1, 1]],
+          [[1, 1, 1],
+           [1, 0, 0]],
+          [[1, 1],
+           [0, 1],
+           [0, 1]]]
+}
+
+# game states
+MENU = 'menu'
+SETTINGS = 'settings'
+SCORES = 'scores'
+GAME = 'game'

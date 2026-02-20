@@ -109,10 +109,7 @@ def draw_board(screen, board, shape):
         for j in range(len(board[i])):
             if board[i][j] != 0:
                 pygame.draw.rect(screen, board[i][j], (BOARD_ORIGIN_X + j * TILE_SIZE, BOARD_ORIGIN_Y + i * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-    for i in range(len(shape.image())):
-        for j in range(len(shape.image()[i])):
-            if shape.image()[i][j] == 1:
-                pygame.draw.rect(screen, shape.color, (BOARD_ORIGIN_X + (shape.x + j) * TILE_SIZE, BOARD_ORIGIN_Y + (shape.y + i) * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    shapes.draw_shape(screen, shape)
 
 # draw the menu screen with the title, start button, high score display, and quit button
 def draw_menu(screen, high_score):
@@ -183,10 +180,48 @@ def draw_settings(screen, game_speed, controls):
 
     return speed_rect, controls_rect
 
-# save the high score to a binary file
-def save_high_score(high_score):
+# get player name input for high score entry
+def get_player_name(screen):
+    font = pygame.font.SysFont(None, 36)
+    input_box = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50)
+    active = False
+    player_name = ''
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return None
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if input_box.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+            elif event.type == pygame.KEYDOWN and active:
+                if event.key == pygame.K_RETURN:
+                    return player_name
+                elif event.key == pygame.K_BACKSPACE:
+                    player_name = player_name[:-1]
+                else:
+                    player_name += event.unicode
+
+        screen.fill(BLACK)
+        prompt_surface = font.render('Enter your name:', True, WHITE)
+        prompt_rect = prompt_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
+        screen.blit(prompt_surface, prompt_rect)
+
+        txt_surface = font.render(player_name, True, WHITE)
+        width = max(200, txt_surface.get_width() + 10)
+        input_box.w = width
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        pygame.draw.rect(screen, WHITE, input_box, 2)
+
+        pygame.display.flip()
+
+# save the high score to a binary file with player name and score
+def save_high_score(high_score, player_name=None):
     with open('high_score.bin', 'wb') as f:
-        pickle.dump(high_score, f)
+        pickle.dump((player_name, high_score), f)
 
 # load the high score from a binary file
 def load_high_score():
