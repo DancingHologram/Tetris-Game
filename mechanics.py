@@ -2,6 +2,8 @@ import pygame
 from constants import *
 import shapes
 import button
+import random
+import pickle
 
 # drop tetronimos by one row
 def drop(shape):
@@ -180,3 +182,97 @@ def draw_settings(screen, game_speed, controls):
     screen.blit(controls_surface, controls_rect)
 
     return speed_rect, controls_rect
+
+# save the high score to a binary file
+def save_high_score(high_score):
+    with open('high_score.bin', 'wb') as f:
+        pickle.dump(high_score, f)
+
+# load the high score from a binary file
+def load_high_score():
+    try:
+        with open('high_score.bin', 'rb') as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return 0
+    
+# reset the game state for a new game
+def reset_game():
+    global board, current_shape, next_shape, score, level
+    board = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
+    current_shape = None
+    next_shape = None
+    score = 0
+    level = 1
+
+# generate a random tetromino shape
+def generate_random_shape():
+    shape_type = random.choice(list(TETROMINO_SHAPES.keys()))
+    color = COLORS[shape_type]
+    return shapes.Shape(BOARD_WIDTH // 2 - 1, 0, color)
+
+# generate the next shape and set it as the current shape
+def generate_next_shape():
+    global current_shape, next_shape
+    if next_shape is None:
+        next_shape = generate_random_shape()
+    current_shape = next_shape
+    next_shape = generate_random_shape()
+
+# check if the current shape can be placed on the board
+def can_place_shape(board, shape):
+    for i in range(len(shape.image())):
+        for j in range(len(shape.image()[i])):
+            if shape.image()[i][j] == 1:
+                if shape.y + i >= BOARD_HEIGHT or shape.x + j < 0 or shape.x + j >= BOARD_WIDTH or board[shape.y + i][shape.x + j] != 0:
+                    return False
+    return True
+
+# check if the current shape can be moved in the specified direction
+def can_move_shape(board, shape, direction):
+    if direction == 'left':
+        shape.x -= 1
+        if not can_place_shape(board, shape):
+            shape.x += 1
+            return False
+    elif direction == 'right':
+        shape.x += 1
+        if not can_place_shape(board, shape):
+            shape.x -= 1
+            return False
+    elif direction == 'down':
+        shape.y += 1
+        if not can_place_shape(board, shape):
+            shape.y -= 1
+            return False
+    return True
+
+# check if the current shape can be rotated
+def can_rotate_shape(board, shape):
+    shape.rotate()
+    if not can_place_shape(board, shape):
+        shape.rotate()  # rotate back if it cannot be placed
+        return False
+    return True
+
+# check if the current shape can be hard dropped
+def can_hard_drop_shape(board, shape):
+    while not check_collision(board, shape):
+        shape.y += 1
+    shape.y -= 1  # move back up one row to the last valid position
+    return can_place_shape(board, shape)
+
+# check if the player has achieved a new high score and update it if necessary
+def check_and_update_high_score(score):
+    high_score = load_high_score()
+    if score > high_score:
+        save_high_score(score)
+        return score
+    return high_score
+
+# check if the player has reached a new level and update the game speed accordingly
+def check_and_update_level(score, level):
+    new_level = score // 1000 + 1
+    if new_level > level:
+        return new_level
+    return level

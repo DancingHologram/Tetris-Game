@@ -1,8 +1,16 @@
 from constants import *
+import random
 import pygame
 import button
 import shapes
 import mechanics
+
+# global variables for the game state
+board = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
+current_shape = None
+next_shape = None
+score = 0
+level = 1
 
 def main():
     pygame.init()
@@ -26,15 +34,10 @@ def main():
                 elif quit_button.is_clicked(mouse_pos):
                     pygame.quit()
                     return
-                
-    # Start the game loop
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # Game logic and drawing code goes here
-
-        pygame.display.flip()
-        clock.tick(FPS)
+    
+    # check if the player has a saved high score and load it
+    try:
+        with open('high_score.bin', 'r') as f:
+            high_score = int(f.read())
+    except FileNotFoundError:
+        high_score = 0
