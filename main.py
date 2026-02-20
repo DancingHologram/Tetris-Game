@@ -10,27 +10,31 @@ def main():
     pygame.display.set_caption("Tetris")
     clock = pygame.time.Clock()
 
-    # Initialize game variables
-    board = [[0] * BOARD_WIDTH for _ in range(BOARD_HEIGHT)]
-    current_shape = shapes.Shape(BOARD_ORIGIN_X // TILE_SIZE, 0, COLORS['I'])  # Example shape
-    score = 0
-
-    # Main game loop
+    # Draw the menu screen and wait for the player to click the start button
+    high_score = 0
+    start_button, quit_button = mechanics.draw_menu(screen, high_score)
+    pygame.display.flip()
+    waiting_for_start = True
+    while waiting_for_start:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                waiting_for_start = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if start_button.is_clicked(mouse_pos):
+                    waiting_for_start = False
+                elif quit_button.is_clicked(mouse_pos):
+                    pygame.quit()
+                    return
+                
+    # Start the game loop
     running = True
     while running:
-        clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Game logic here (e.g., move shape down, check for collisions, etc.)
+        # Game logic and drawing code goes here
 
-        # Clear the screen
-        screen.fill(BLACK)
-
-        # Draw the board and current shape here
-
-        # Update the display
         pygame.display.flip()
-
-    pygame.quit()
+        clock.tick(FPS)
