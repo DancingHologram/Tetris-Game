@@ -276,3 +276,37 @@ def check_and_update_level(score, level):
     if new_level > level:
         return new_level
     return level
+
+# update the game state by dropping the current shape, checking for collisions, locking the shape in place, clearing lines, and generating a new shape if necessary
+def update_game_state(current_shape, next_shape, board, score, level):
+    drop(current_shape)
+    if check_collision(board, current_shape):
+        current_shape.y -= 1  # move back up to the last valid position
+        lock_shape(board, current_shape)
+        lines_cleared = clear_lines(board)
+        score, level = update_score_and_level(score, level, lines_cleared)
+        generate_next_shape()
+    return score, level
+
+# show the speed settings menu and allow the player to adjust the game speed
+def show_speed_menu(screen):
+    speed_rect, _ = draw_settings(screen, 'Normal', 'Arrow Keys')
+    pygame.display.flip()
+    return speed_rect
+
+# show the controls settings menu and allow the player to adjust the controls
+def show_controls_menu(screen):
+    _, controls_rect = draw_settings(screen, 'Normal', 'Arrow Keys')
+    pygame.display.flip()
+    return controls_rect
+
+# draw the controls menu with the current control scheme
+def draw_controls_menu(screen, controls):
+    screen.fill(BLACK)
+    font = pygame.font.SysFont(None, 72)
+    controls_surface = font.render(f'Controls: {controls}', True, WHITE)
+    controls_rect = controls_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+
+# draw the back button to return to the settings menu
+    back_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, 'Back')
+    back_button.draw(screen)
