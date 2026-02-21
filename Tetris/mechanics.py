@@ -1,5 +1,9 @@
-from constants import BOARD_WIDTH, BOARD_HEIGHT, SCORE_SINGLE_LINE, SCORE_DOUBLE_LINE, SCORE_TRIPLE_LINE, SCORE_TETRIS
+# Tetris mechanics module
+from constants import BOARD_WIDTH, BOARD_HEIGHT, SCORE_SINGLE_LINE, SCORE_DOUBLE_LINE, SCORE_TRIPLE_LINE, SCORE_TETRIS, LOCK_DELAY_MS
 import shapes
+
+# global
+lock_timer = 0
 
 # Drop a piece onto the board
 def drop(shape):
@@ -69,9 +73,10 @@ def update_level(score):
 # Check to see if a shape can be placed
 def can_place_shape(board, shape):
     return not check_collision(board, shape)
-    
+
 # update the game state
-def update_game_state(current_shape, next_shape, board, score, level):
+def update_game_state(current_shape, next_shape, board, score, level, dt):
+    global lock_timer
     if current_shape is None and next_shape is None:
         current_shape = shapes.get_random_shape()
         next_shape = shapes.get_random_shape()
@@ -86,16 +91,24 @@ def update_game_state(current_shape, next_shape, board, score, level):
             game_over = True
         else:
             return current_shape, next_shape, board, score, level, False
+    is_grounded = False
     game_over = False
     drop(current_shape)
     if check_collision(board, current_shape):
         current_shape.y -= 1
+        lock_timer += dt
+        is_grounded = True
+    else:
+        lock_timer = 0
+        is_grounded = False
+    if is_grounded and lock_timer >= LOCK_DELAY_MS:
         lock_shape(board, current_shape)
         board, lines_cleared = clear_lines(board)
         score += score_for_lines(lines_cleared)
         level = update_level(score)
         current_shape = next_shape
         next_shape = shapes.get_random_shape()
+        lock_timer = 0
         if not can_place_shape(board, current_shape):
             game_over = True
     return current_shape, next_shape, board, score, level, game_over
@@ -128,4 +141,22 @@ def hard_drop(shape, board):
         moved = True
     if moved == True:
         shape.y -= 1
+    # Lock the piece immediately after hard drop
+    lock_timer = 0
     return moved
+
+# allow piece holding and swapping
+def hold_shape(current_shape, held_shape, board):
+    can_hold = None
+    if held_shape is None:
+        held_shape = current_shape
+        current_shape = shapes.get_random_shape()
+        can_hold = False
+    else:
+        temp = held_shape
+        held_shape = current_shape
+        current_shape = temp
+        can_hold = True
+    if not can_place_shape(board, current_shape):
+        game_over = True
+    return current_shape, held_shape, can_hold, game_over

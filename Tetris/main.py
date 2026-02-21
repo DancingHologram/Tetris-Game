@@ -7,6 +7,7 @@ pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
+dt = clock.tick(60) / 1000.0 * 1000.0  # delta time in milliseconds
 
 def create_board():
     board = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
@@ -44,6 +45,7 @@ def main():
     game_over = False
     drop_counter = 0
     drop_interval = max(5, FPS // level)
+    did_soft_drop = False
 
     while True:
         for event in pygame.event.get():
@@ -68,19 +70,22 @@ def main():
                         move_right(current_shape, board)
                     elif event.key == pygame.K_DOWN:
                         move_down(current_shape, board)
+                        did_soft_drop = True
                     elif event.key == pygame.K_UP:
                         rotate_shape(current_shape, board)
                     elif event.key == pygame.K_SPACE:
                         hard_drop(current_shape, board)
                         current_shape, next_shape, board, score, level, game_over = update_game_state(
-                            current_shape, next_shape, board, score, level)
+                            current_shape, next_shape, board, score, level, dt)
 
         if not game_over:
             drop_counter += 1
-            if drop_counter >= drop_interval:
+            if drop_counter >= drop_interval or did_soft_drop:
                 drop_counter = 0
+                score += 1 if did_soft_drop else 0
                 current_shape, next_shape, board, score, level, game_over = update_game_state(
-                    current_shape, next_shape, board, score, level)
+                    current_shape, next_shape, board, score, level, dt)
+                did_soft_drop = False
 
         screen.fill(BLACK)
         draw_board(screen, board)
