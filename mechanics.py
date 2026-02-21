@@ -121,7 +121,17 @@ def draw_board(screen, board, shape):
         for j in range(len(board[i])):
             if board[i][j] != 0:
                 pygame.draw.rect(screen, board[i][j], (BOARD_ORIGIN_X + j * TILE_SIZE, BOARD_ORIGIN_Y + i * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-    shapes.draw_shape(screen, shape)
+    # draw the active shape
+    for i in range(len(shape.image())):
+        for j in range(len(shape.image()[i])):
+            if shape.image()[i][j] == 1:
+                pygame.draw.rect(
+                    screen,
+                    shape.color,
+                    (BOARD_ORIGIN_X + (shape.x + j) * TILE_SIZE,
+                    BOARD_ORIGIN_Y + (shape.y + i) * TILE_SIZE,
+                    TILE_SIZE, TILE_SIZE)
+                )
 
 # draw the menu screen with the title, start button, high score display, and quit button
 def draw_menu(screen, high_score):

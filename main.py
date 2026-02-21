@@ -22,6 +22,11 @@ clock = pygame.time.Clock()
 # display the main menu with start, settings, scores, and quit buttons
 # use mechanics to handle button clicks and navigate to the appropriate menu or start the game loop
 def main_menu():
+    font = pygame.font.SysFont(None, 72)
+    title_surface = font.render("TETRIS", True, WHITE)
+    title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+    screen.blit(title_surface, title_rect)
+    
     start_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 100, 200, 50, "Start Game")
     settings_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2, 200, 50, "Settings")
     scores_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, 200, 50, "High Scores")
@@ -172,7 +177,9 @@ def game_loop():
 
     while True:
         screen.fill(BLACK)
-        # draw the game board and current shape here
+        mechanics.draw_board(screen, board, current_shape)
+        mechanics.draw_score_and_level(screen, score, level)
+        mechanics.draw_next_shape(RIGHT_BOUNDARY - 100, MARGIN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
