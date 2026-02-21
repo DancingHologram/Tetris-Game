@@ -75,14 +75,14 @@ def update_game_state(current_shape, next_shape, board, score, level):
     if current_shape is None and next_shape is None:
         current_shape = shapes.get_random_shape()
         next_shape = shapes.get_random_shape()
-        if can_place_shape(board, current_shape) == False:
+        if not can_place_shape(board, current_shape):
             game_over = True
         else:
             return current_shape, next_shape, board, score, level, False
     elif current_shape is None and next_shape is not None:
         current_shape = next_shape if next_shape != None else shapes.get_random_shape()
         next_shape = shapes.get_random_shape()
-        if can_place_shape(board, current_shape) == False:
+        if not can_place_shape(board, current_shape):
             game_over = True
         else:
             return current_shape, next_shape, board, score, level, False
@@ -111,6 +111,11 @@ def move_right(shape, board):
     if check_collision(board, shape):
         shape.x -= 1
 
+def move_down(shape, board):
+    shape.y += 1
+    if check_collision(board, shape):
+        shape.y -= 1
+
 def rotate_shape(shape, board):
     shape.rotate()
     if check_collision(board, shape):
@@ -118,9 +123,9 @@ def rotate_shape(shape, board):
 
 def hard_drop(shape, board):
     moved = False
-    if moved == True:
-        shape.y -= 1
     while not check_collision(board, shape):
         shape.y += 1
         moved = True
+    if moved == True:
+        shape.y -= 1
     return moved
