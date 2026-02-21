@@ -1,0 +1,23 @@
+# screen display
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+FPS = 60
+
+# game board
+TILE_SIZE = 40
+BOARD_WIDTH = 600
+BOARD_HEIGHT = 600
+BOARD_ORIGIN_X = (BOARD_WIDTH // BOARD_HEIGHT)
+BOARD_ORIGIN_Y = (BOARD_HEIGHT // BOARD_WIDTH)
+
+# color palette dictionary
+COLORS = {
+    "RED": (255,0,0),
+    "BLUE": (0,255,0),
+    "GREEN": (0,0,255)
+}
+
+BLACK = (0,0,0)
+WHITE = (255,255,255)
+
+HIGH_SCORE_FILE = "high_score.bin"
