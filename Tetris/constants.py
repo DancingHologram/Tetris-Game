@@ -115,8 +115,8 @@ TETROMINO_SHAPES = {
         [[1,1,1],
          [1,0,0]],                                   # Rotation 2
         [[1,1],
-         [1,0],
-         [1,0]]                                      # Rotation 3
+         [0,1],
+         [0,1]]                                      # Rotation 3
     ]
 }
 
