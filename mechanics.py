@@ -53,11 +53,23 @@ def move(shape, direction, board):
         if check_collision(board, shape):
             shape.x -= 1
 
+# convenience functions for moving the shape
+def move_left(shape, board):
+    move(shape, 'left', board)
+
+def move_right(shape, board):
+    move(shape, 'right', board)
+
+def move_down(shape, board):
+    shape.y += 1
+    if check_collision(board, shape):
+        shape.y -= 1
+
 # rotate the shape
 def rotate(shape, board):
     shape.rotate()
     if check_collision(board, shape):
-        shape.rotate()  # rotate back if there is a collision
+        shape.rotate_back()  # rotate back if there is a collision
 
 # hard drop the shape
 def hard_drop(shape, board):
@@ -242,9 +254,7 @@ def reset_game():
 
 # generate a random tetromino shape
 def generate_random_shape():
-    shape_type = random.choice(list(TETROMINO_SHAPES.keys()))
-    color = COLORS[shape_type]
-    return shapes.Shape(BOARD_WIDTH // 2 - 1, 0, color)
+    return shapes.get_random_shape()
 
 # generate the next shape and set it as the current shape
 def generate_next_shape():
@@ -345,3 +355,44 @@ def draw_controls_menu(screen, controls):
 # draw the back button to return to the settings menu
     back_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, 'Back')
     back_button.draw(screen)
+
+# blit the controls text to the screen
+def draw_controls_menu(screen, controls):
+    screen.fill(BLACK)
+    font = pygame.font.SysFont(None, 72)
+    controls_surface = font.render(f'Controls: {controls}', True, WHITE)
+    controls_rect = controls_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+    screen.blit(controls_surface, controls_rect)
+    back_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, 'Back')
+    back_button.draw(screen)
+    return back_button, controls_rect
+
+# button input for gameloop
+def handle_settings_input(screen, event, speed_rect, controls_rect):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        mouse_pos = pygame.mouse.get_pos()
+        if speed_rect.collidepoint(mouse_pos):
+            return 'speed'
+        elif controls_rect.collidepoint(mouse_pos):
+            return 'controls'
+    return None
+
+# button input for controls menu
+def handle_controls_input(screen, event, back_button):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        mouse_pos = pygame.mouse.get_pos()
+        if back_button.is_clicked(mouse_pos):
+            return 'back'
+    return None
+
+# draw the controls menu with the current control scheme and a back button to return to the settings menu
+def draw_controls_menu(screen, controls):
+    screen.fill(BLACK)
+    font = pygame.font.SysFont(None, 72)
+    controls_surface = font.render(f'Controls: {controls}', True, WHITE)
+    controls_rect = controls_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 4))
+    screen.blit(controls_surface, controls_rect)
+    back_button = button.Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 - 25, 200, 50, 'Back')
+    back_button.draw(screen)
+    return back_button, controls_rect
+
