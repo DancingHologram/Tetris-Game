@@ -37,7 +37,7 @@ class Button:
         pygame.draw.rect(screen, border_color, (self.x, self.y, self.width, self.height), 2)
         # Create the button font and render the text
         font = pygame.font.SysFont(None, self.font_size)
-        text_surface = font.render(self.text, True, self.text_color)
+        text_surface = font.render(self.text, True, current_text_color)
         # position the text at the center of the button
         text_rect = text_surface.get_rect()
         text_rect.center = (self.x + self.width / 2, self.y + self.height / 2)
@@ -46,7 +46,7 @@ class Button:
         # disabled button state
         if not self.enabled:
             # draw a semi transparent overlay
-            overlay = pygame.surface((self.width, self.height))
+            overlay = pygame.Surface((self.width, self.height))
             overlay.set_alpha(self.disabled_alpha)
             overlay.fill(BLACK)
             screen.blit(overlay, (self.x, self.y))
