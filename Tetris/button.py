@@ -4,15 +4,25 @@ import pygame
 # button class
 class Button:
     def __init__(self, x, y, width, height, text, color=None, text_color=None, hover_color=None, font_size=36, enabled=True):
+        # initialize button properties
+        # position and size
+        # left top corner
         self.x = x
+        # left top corner
         self.y = y
+        # dimensions
+        # width
         self.width = width
+        # height
         self.height = height
+        # text and colors
         self.text = text
+        # colors with defaults
         self.color = color if color else (100,100,100) # gray default if none specified
         self.text_color = text_color if text_color else (255,255,255) # white default
         self.hover_color = hover_color if hover_color else (150,150,150) # light gray default
         self.font_size = font_size
+        # state
         self.is_hovered = False
         self.enabled = enabled
 
@@ -25,9 +35,11 @@ class Button:
         # Choose the text color based on hover state and if button enabled
         # Defalut to color if not hovered
         if not self.enabled:
+            # Use disabled colors
             current_color = self.disabled_color
             current_text_color = self.disabled_text_color
         else:
+            # Use hover color if hovered
             current_color = self.hover_color if self.is_hovered else self.color
             current_text_color = self.text_color
         # Draw the button background
@@ -47,8 +59,11 @@ class Button:
         if not self.enabled:
             # draw a semi transparent overlay
             overlay = pygame.Surface((self.width, self.height))
+            # set transparency level
             overlay.set_alpha(self.disabled_alpha)
+            # fill with black
             overlay.fill(BLACK)
+            # blit overlay on button
             screen.blit(overlay, (self.x, self.y))
 
     def is_clicked(self, mouse_pos):
@@ -56,14 +71,23 @@ class Button:
         if not self.enabled:
             return False
         # check cursor collision
+        # check x range
         x_in_range = self.x <= mouse_pos[0] <= self.x + self.width
+        # check y range
         y_in_range = self.y <= mouse_pos[1] <= self.y + self.height
+        # return true if both in range
         return x_in_range and y_in_range
 
+    # update hover state based on mouse position
     def update_hover(self, mouse_pos):
+        # only update if button enabled
         if not self.enabled:
             self.is_hovered = False
             return
+        # check if mouse is over button
+        # check x range
         x_in_range = self.x <= mouse_pos[0] <= self.x + self.width
+        # check y range
         y_in_range = self.y <= mouse_pos[1] <= self.y + self.height
+        # set hover state
         self.is_hovered = x_in_range and y_in_range
