@@ -3,6 +3,7 @@ from constants import BOARD_WIDTH, BOARD_HEIGHT, SCORE_SINGLE_LINE, SCORE_DOUBLE
 import shapes
 import pickle
 import pygame
+import json
 
 # Drop a piece onto the board
 def drop(shape):
