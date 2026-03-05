@@ -2,3 +2,4 @@
 __pycache__
 *.pyc
 high_score.bin
+high_score.csv

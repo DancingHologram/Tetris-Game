@@ -165,6 +165,7 @@ def main():
                     board = create_board()
                     current_shape = None
                     next_shape = None
+                    record_score(score)
                     score = 0
                     level = 1
                     game_over = False
@@ -176,6 +177,7 @@ def main():
                     state = "playing"
                 # return to menu
                 elif event.key == pygame.K_m:
+                    record_score(score)
                     state = "menu"
 
             # in-game controls
@@ -272,8 +274,7 @@ def main():
             # display game over text
             draw_center_text(f"Game Over! Final Score: {score}", SCREEN_HEIGHT // 2 - 20)
             draw_center_text("Press R to Restart or M for Menu", SCREEN_HEIGHT // 2 + 20, size=30)
-            score = str(score)
-            record_score(score)
+            score = str(score) 
         # update the display
         pygame.display.flip()
 

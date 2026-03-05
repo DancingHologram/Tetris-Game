@@ -2,6 +2,7 @@
 from constants import BOARD_WIDTH, BOARD_HEIGHT, SCORE_SINGLE_LINE, SCORE_DOUBLE_LINE, SCORE_TRIPLE_LINE, SCORE_TETRIS, LOCK_DELAY_MS
 import shapes
 import pickle
+import pygame
 
 # Drop a piece onto the board
 def drop(shape):
@@ -124,7 +125,6 @@ def update_game_state(current_shape, next_shape, board, score, level, lock_timer
         if check_collision(board, current_shape):
             # set game over flag
             game_over = True
-            record_score(str(score))
             # return early
             return current_shape, next_shape, board, score, level, game_over, lock_timer_ms
         # return early after spawning shape
@@ -169,7 +169,6 @@ def update_game_state(current_shape, next_shape, board, score, level, lock_timer
         if check_collision(board, current_shape):
             # set game over flag
             game_over = True
-            record_score(str(score))
     # return updated game state
     return current_shape, next_shape, board, score, level, game_over, lock_timer_ms
 
@@ -247,5 +246,5 @@ def hold_shape(current_shape, held_shape, board):
     return current_shape, held_shape, can_hold, game_over
 
 def record_score(x):
-    with open("high_score.bin", "a") as file:
-        pickle.dump(x, file, int)
+    with open("Tetris-Game\Tetris\high_score.csv", "a", newline="\n") as file:
+        file.write(x)
