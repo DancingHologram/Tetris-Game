@@ -2,7 +2,7 @@ import pygame
 import sys
 import button
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK, WHITE, TILE_SIZE, BOARD_ORIGIN_X, BOARD_ORIGIN_Y, BUTTON_COLOR, BOARD_WIDTH, BOARD_HEIGHT
-from mechanics import update_game_state, move_left, move_right, rotate_shape, hard_drop, move_down
+from mechanics import update_game_state, move_left, move_right, rotate_shape, hard_drop, move_down, record_score
 pygame.init()
 
 # set up display
@@ -10,7 +10,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # set up clock
 clock = pygame.time.Clock()
 
-# board creation and drawing
+# board creation and drawing 
 def create_board():
     # create empty board
     board = [[0 for _ in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
@@ -272,6 +272,8 @@ def main():
             # display game over text
             draw_center_text(f"Game Over! Final Score: {score}", SCREEN_HEIGHT // 2 - 20)
             draw_center_text("Press R to Restart or M for Menu", SCREEN_HEIGHT // 2 + 20, size=30)
+            score = str(score)
+            record_score(score)
         # update the display
         pygame.display.flip()
 

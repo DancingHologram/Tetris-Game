@@ -27,8 +27,8 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 # Config filepaths
-HIGH_SCORE_FILE = "high_score.bin"
-CONTROLS_CONFIG_FILE = "controls.bin"
+HIGH_SCORE_FILE = "Tetris\high_score.bin"
+CONTROLS_CONFIG_FILE = "Tetris\controls.bin"
 
 # Button colors
 BUTTON_COLOR = (100, 100, 100)
