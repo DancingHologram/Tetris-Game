@@ -1,7 +1,6 @@
 # Tetris mechanics module
 from constants import BOARD_WIDTH, BOARD_HEIGHT, SCORE_SINGLE_LINE, SCORE_DOUBLE_LINE, SCORE_TRIPLE_LINE, SCORE_TETRIS, LOCK_DELAY_MS
 import shapes
-import pickle
 import pygame
 import json
 
@@ -247,5 +246,5 @@ def hold_shape(current_shape, held_shape, board):
     return current_shape, held_shape, can_hold, game_over
 
 def record_score(x):
-    with open("Tetris-Game\Tetris\high_score.csv", "a", newline="\n") as file:
-        file.write(x)
+    with open("Tetris-Game\Tetris\high_score.json", "a", newline="\n") as file:
+        json.dump(x, file)
